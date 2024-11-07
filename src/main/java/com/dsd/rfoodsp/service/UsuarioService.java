@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 // import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.dsd.rfoodsp.config.Security.JwtUtil;
 import com.dsd.rfoodsp.dto.UsuarioDTO;
 import com.dsd.rfoodsp.entities.Rol;
 import com.dsd.rfoodsp.entities.Usuario;
@@ -23,6 +24,9 @@ public class UsuarioService {
 
     @Autowired
     private final RolRepository rolRepository;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -45,16 +49,30 @@ public class UsuarioService {
         return usuarioRepository.findByNomUsuario(nomUsuario);
     }
 
-    public boolean login(UsuarioDTO datos){
+    public String login(UsuarioDTO datos){
+
         Usuario usuario = usuarioRepository.findByNomUsuario(datos.getNomUsuario());
 
-        if(usuario != null){
-            String contrasenaHash = usuario.getContrasena();
-            return passwordEncoder.matches(datos.getContrasena(), contrasenaHash);
+        if(usuario != null && passwordEncoder.matches(datos.getContrasena(), usuario.getContrasena())){
+            // String contrasenaHash = usuario.getContrasena();
+            // return passwordEncoder.matches(datos.getContrasena(), contrasenaHash);
+            return jwtUtil.generateToken(usuario.getNomUsuario());
         }
-        return false;
+        return null;
 
     }
+
+
+    // public boolean login(UsuarioDTO datos){
+    //     Usuario usuario = usuarioRepository.findByNomUsuario(datos.getNomUsuario());
+
+    //     if(usuario != null){
+    //         String contrasenaHash = usuario.getContrasena();
+    //         return passwordEncoder.matches(datos.getContrasena(), contrasenaHash);
+    //     }
+    //     return false;
+
+    // }
 
 
 

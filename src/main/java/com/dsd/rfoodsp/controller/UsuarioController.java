@@ -61,10 +61,12 @@ public class UsuarioController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody UsuarioDTO datos){
 
-        if(servicio.login(datos)){
-            return ResponseEntity.ok("Ok");
+        String token = servicio.login(datos);
+
+        if(token != null){
+            return ResponseEntity.ok().body("Bearer " + token);
         }else{
-           return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Fallo Login");
+           return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas");
         }
     }
 
