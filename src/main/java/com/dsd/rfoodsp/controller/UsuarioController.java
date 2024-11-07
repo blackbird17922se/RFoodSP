@@ -58,6 +58,24 @@ public class UsuarioController {
 
 
 
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody UsuarioDTO datos){
+
+        if(servicio.login(datos)){
+            return ResponseEntity.ok("Ok");
+        }else{
+           return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Fallo Login");
+        }
+    }
+
+
+    @PostMapping("/nomUsuario")
+    public Usuario cargarUsuarioNomUsuario(@RequestBody Usuario datos){
+       return servicio.cargarUsuarioNomUsuario(datos.getNomUsuario());
+    }
+
+
+
     @PostMapping
     public ResponseEntity<UsuarioRest> crearUsuario(@Valid @RequestBody UsuarioDTO datos, 
         BindingResult result){

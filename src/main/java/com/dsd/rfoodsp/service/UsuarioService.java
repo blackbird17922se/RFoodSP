@@ -41,6 +41,22 @@ public class UsuarioService {
     }
 
 
+    public Usuario cargarUsuarioNomUsuario(String nomUsuario){
+        return usuarioRepository.findByNomUsuario(nomUsuario);
+    }
+
+    public boolean login(UsuarioDTO datos){
+        Usuario usuario = usuarioRepository.findByNomUsuario(datos.getNomUsuario());
+
+        if(usuario != null){
+            String contrasenaHash = usuario.getContrasena();
+            return passwordEncoder.matches(datos.getContrasena(), contrasenaHash);
+        }
+        return false;
+
+    }
+
+
 
 
     public UsuarioDTO crearUsuario(UsuarioDTO usuarioDTO ){
