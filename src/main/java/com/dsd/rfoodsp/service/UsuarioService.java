@@ -1,6 +1,8 @@
 package com.dsd.rfoodsp.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,7 +16,6 @@ import com.dsd.rfoodsp.entities.Usuario;
 import com.dsd.rfoodsp.mapper.UsuarioMapper;
 import com.dsd.rfoodsp.repository.RolRepository;
 import com.dsd.rfoodsp.repository.UsuarioRepository;
-import com.dsd.rfoodsp.responses.UsuarioRest;
 
 @Service
 public class UsuarioService {
@@ -102,6 +103,23 @@ public class UsuarioService {
 
         // Convertir de vuelta de entidad a DTO y devolver el resultado
         return UsuarioMapper.INSTANCE.toUsuarioDTO(usuarioGuardado);
+    }
+
+    public UsuarioDTO editarUsuario(Integer id, UsuarioDTO datos){
+
+        // Recuperamos el usuario desde la base de datos por su ID
+        Usuario usuarioEditar = usuarioRepository.findByIdUsuario(id);
+
+        
+        if (usuarioEditar == null) {
+            throw new NoSuchElementException("Usuario con ID " + id +  "no encontrado");
+        }
+
+        usuarioEditar.setNombre(datos.getNombre());
+        usuarioEditar.setApellido(datos.getApellido());
+
+        return UsuarioMapper.INSTANCE.toUsuarioDTO(usuarioRepository.save(usuarioEditar));
+
     }
     
 }

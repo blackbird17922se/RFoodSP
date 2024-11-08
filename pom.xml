@@ -80,6 +80,14 @@
 			<artifactId>hibernate-validator</artifactId>
 			<version>6.2.0.Final</version> <!-- Usa la versión más reciente -->
 		</dependency>
+
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<version>6.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+
 		
 		<!-- Dependencia para la API de validación -->
 		<dependency>

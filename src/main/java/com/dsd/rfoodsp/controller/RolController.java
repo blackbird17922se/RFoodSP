@@ -15,7 +15,6 @@ import com.dsd.rfoodsp.service.RolService;
 
 import jakarta.validation.Valid;
 
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
