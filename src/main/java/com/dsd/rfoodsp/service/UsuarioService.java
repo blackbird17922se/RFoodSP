@@ -93,14 +93,9 @@ public class UsuarioService {
     }
 
 
-
-
-
-
-
-    // public List<Usuario> cargarUsuarios() {
-    //     return usuarioRepository.findAll();
-    // }
+    public List<Usuario> cargarUsuarios() {
+        return usuarioRepository.findAll();
+    }
 
 
     

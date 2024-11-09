@@ -36,15 +36,6 @@ public class UsuarioController {
     private final UsuarioService servicio;
 
 
-    // @GetMapping
-    // public List<UsuarioRest> cargarUsuarios(){
-
-    //     List<Usuario> usuarios = servicio.cargarUsuarios();
-    //     return UsuarioMapper.INSTANCE.usuariosToUsuarioRests(usuarios);
-
-    // }
-
-
     // nuevo
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest datos){
@@ -61,6 +52,16 @@ public class UsuarioController {
         return ResponseEntity.ok(
             servicio.register(entity)
         );
+    }
+
+    
+
+    @GetMapping
+    public List<UsuarioRest> cargarUsuarios(){
+
+        List<Usuario> usuarios = servicio.cargarUsuarios();
+        return UsuarioMapper.INSTANCE.usuariosToUsuarioRests(usuarios);
+
     }
 
 

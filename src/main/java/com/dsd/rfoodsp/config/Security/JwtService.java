@@ -58,7 +58,6 @@ public class JwtService {
             .build()
             .parseClaimsJws(token)
             .getBody();
-
     }
 
     public <T> T getClaim(String token, Function<Claims, T> claimasResolver){
