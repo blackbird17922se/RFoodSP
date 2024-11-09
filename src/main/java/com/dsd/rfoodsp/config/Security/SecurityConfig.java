@@ -28,7 +28,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF
             // rutas privadas y protegidas
             .authorizeHttpRequests(authReq -> authReq
-                    .requestMatchers("/usuarios/login").permitAll() // request publicos
+                    .requestMatchers("/login").permitAll() // request publicos
                     .anyRequest().authenticated() // demas request protegidos
             )
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

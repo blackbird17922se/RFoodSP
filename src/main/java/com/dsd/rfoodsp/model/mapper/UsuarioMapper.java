@@ -1,4 +1,4 @@
-package com.dsd.rfoodsp.mapper;
+package com.dsd.rfoodsp.model.mapper;
 
 import java.util.List;
 
@@ -6,8 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-import com.dsd.rfoodsp.dto.UsuarioDTO;
-import com.dsd.rfoodsp.entities.Usuario;
+import com.dsd.rfoodsp.model.dto.UsuarioDTO;
+import com.dsd.rfoodsp.model.entities.Usuario;
 import com.dsd.rfoodsp.responses.UsuarioRest;
 
 @Mapper

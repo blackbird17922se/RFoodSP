@@ -2,11 +2,7 @@ package com.dsd.rfoodsp.controller;
 
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,18 +10,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dsd.rfoodsp.config.Security.AuthResponse;
-import com.dsd.rfoodsp.config.Security.LoginRequest;
-import com.dsd.rfoodsp.dto.UsuarioDTO;
-import com.dsd.rfoodsp.entities.Usuario;
-import com.dsd.rfoodsp.mapper.UsuarioMapper;
+import com.dsd.rfoodsp.model.dto.UsuarioDTO;
+import com.dsd.rfoodsp.model.entities.Usuario;
+import com.dsd.rfoodsp.model.mapper.UsuarioMapper;
 import com.dsd.rfoodsp.responses.UsuarioRest;
 import com.dsd.rfoodsp.service.UsuarioService;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 
 @RestController
@@ -34,16 +25,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class UsuarioController {
 
     private final UsuarioService servicio;
-
-
-    // nuevo
-    @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest datos){
-
-        return ResponseEntity.ok(
-            servicio.login(datos)
-        );
-    }
 
 
     @PostMapping("/registro")

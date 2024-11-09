@@ -1,4 +1,4 @@
-package com.dsd.rfoodsp.dto;
+package com.dsd.rfoodsp.model.dto;
 
 public class UsuarioDTO {
 

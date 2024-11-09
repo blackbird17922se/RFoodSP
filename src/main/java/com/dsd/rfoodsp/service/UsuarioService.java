@@ -1,26 +1,15 @@
 package com.dsd.rfoodsp.service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-// import org.springframework.security.crypto.password.PasswordEncoder;
-// import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.dsd.rfoodsp.config.Security.AuthResponse;
 import com.dsd.rfoodsp.config.Security.JwtService;
-// import com.dsd.rfoodsp.config.Security.JwtUtil;
-import com.dsd.rfoodsp.config.Security.LoginRequest;
-import com.dsd.rfoodsp.dto.UsuarioDTO;
-import com.dsd.rfoodsp.entities.Rol;
-import com.dsd.rfoodsp.entities.Usuario;
-import com.dsd.rfoodsp.mapper.UsuarioMapper;
+import com.dsd.rfoodsp.model.dto.UsuarioDTO;
+import com.dsd.rfoodsp.model.entities.Rol;
+import com.dsd.rfoodsp.model.entities.Usuario;
 import com.dsd.rfoodsp.repository.RolRepository;
 import com.dsd.rfoodsp.repository.UsuarioRepository;
 
@@ -34,42 +23,8 @@ public class UsuarioService {
     private final RolRepository rolRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
-
-    @Autowired
-    private CustomUserDetailsService cUserDetailsService;
-
-
-    public AuthResponse login(LoginRequest datos) {
-        
-        try {
-            // Autentica al usuario utilizando el `AuthenticationManager`
-            authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(datos.getNom_usuario(), datos.getContrasena())
-            );
-
-
-            // Ahora carga el usuario desde la base de datos después de autenticar
-            UserDetails user = cUserDetailsService.loadUserByUsername(datos.getNom_usuario());
-            // usuarioRepository.findByNomUsuario(datos.getNom_usuario()).orElseThrow();
-            String token = jwtService.getToken(user);
-            
-            return AuthResponse.builder().token(token).build();
-
-        } catch (Exception e) {
-            throw new RuntimeException("Credenciales incorrectas", e);
-        }
-
-    }
-
-    public AuthResponse login2(LoginRequest datos) {
-
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(datos.getNom_usuario(), datos.getContrasena()));
-        UserDetails user = usuarioRepository.findByNomUsuario(datos.getNom_usuario()).orElseThrow();
-        String token = jwtService.getToken(user);
-        return AuthResponse.builder().token(token).build();
     
-    }
+    
 
     public AuthResponse register(UsuarioDTO usuarioDTO) {
 

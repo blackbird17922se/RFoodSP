@@ -1,4 +1,4 @@
-package com.dsd.rfoodsp.entities;
+package com.dsd.rfoodsp.model.entities;
 
 import javax.validation.constraints.NotBlank;
 

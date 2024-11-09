@@ -10,7 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dsd.rfoodsp.entities.Rol;
+import com.dsd.rfoodsp.model.entities.Rol;
 import com.dsd.rfoodsp.service.RolService;
 
 import jakarta.validation.Valid;

@@ -8,11 +8,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.dsd.rfoodsp.entities.Usuario;
+import com.dsd.rfoodsp.model.entities.Usuario;
 import com.dsd.rfoodsp.repository.UsuarioRepository;
 
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+
 
 /** De mau */
 @Service
