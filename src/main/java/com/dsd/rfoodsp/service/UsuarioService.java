@@ -5,11 +5,18 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+// import org.springframework.security.crypto.password.PasswordEncoder;
 // import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.dsd.rfoodsp.config.Security.JwtUtil;
+import com.dsd.rfoodsp.config.Security.AuthResponse;
+import com.dsd.rfoodsp.config.Security.JwtService;
+// import com.dsd.rfoodsp.config.Security.JwtUtil;
+import com.dsd.rfoodsp.config.Security.LoginRequest;
 import com.dsd.rfoodsp.dto.UsuarioDTO;
 import com.dsd.rfoodsp.entities.Rol;
 import com.dsd.rfoodsp.entities.Usuario;
@@ -17,7 +24,10 @@ import com.dsd.rfoodsp.mapper.UsuarioMapper;
 import com.dsd.rfoodsp.repository.RolRepository;
 import com.dsd.rfoodsp.repository.UsuarioRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class UsuarioService {
 
     @Autowired
@@ -26,61 +36,77 @@ public class UsuarioService {
     @Autowired
     private final RolRepository rolRepository;
 
-    @Autowired
-    private JwtUtil jwtUtil;
+    // @Autowired
+    // private JwtUtil jwtUtil;
+
+    private final JwtService jwtService;
 
     private final PasswordEncoder passwordEncoder;
 
-    
+    private final AuthenticationManager authenticationManager;
 
+    // public UsuarioService(UsuarioRepository usuarioRepository, RolRepository rolRepository
+    // // , PasswordEncoder passwordEncoder
+    //         , JwtService jwtService) {
+    //     this.usuarioRepository = usuarioRepository;
+    //     this.rolRepository = rolRepository;
+    //     this.jwtService = jwtService;
+    //     // this.passwordEncoder = passwordEncoder;
+    // }
 
-    public UsuarioService(UsuarioRepository usuarioRepository, RolRepository rolRepository, PasswordEncoder passwordEncoder) {
-        this.usuarioRepository = usuarioRepository;
-        this.rolRepository = rolRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
-
-
-    public List<Usuario> cargarUsuarios(){
+    public List<Usuario> cargarUsuarios() {
         return usuarioRepository.findAll();
     }
 
+    // public Usuario cargarUsuarioNomUsuario(String nomUsuario){
+    // return usuarioRepository.findByNomUsuario(nomUsuario);
+    // }
 
-    public Usuario cargarUsuarioNomUsuario(String nomUsuario){
-        return usuarioRepository.findByNomUsuario(nomUsuario);
-    }
+    public AuthResponse login(LoginRequest datos) {
 
-    public String login(UsuarioDTO datos){
-
-        Usuario usuario = usuarioRepository.findByNomUsuario(datos.getNomUsuario());
-
-        if(usuario != null && passwordEncoder.matches(datos.getContrasena(), usuario.getContrasena())){
-            // String contrasenaHash = usuario.getContrasena();
-            // return passwordEncoder.matches(datos.getContrasena(), contrasenaHash);
-            return jwtUtil.generateToken(usuario.getNomUsuario());
-        }
-        return null;
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(datos.getNom_usuario(), datos.getContrasena()));
+        UserDetails user = usuarioRepository.findByNomUsuario(datos.getNom_usuario()).orElseThrow();
+        String token = jwtService.getToken(user);
+        return AuthResponse.builder().token(token).build();
+    
 
     }
 
+    public AuthResponse register(UsuarioDTO usuarioDTO) {
+
+        // Buscar el rol y asignarlo al usuario
+        Rol rol = rolRepository.findById(usuarioDTO.getRolId())
+                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+
+        Usuario usuario = Usuario.builder()
+                .nomUsuario(usuarioDTO.getNomUsuario())
+                .contrasena(passwordEncoder.encode(usuarioDTO.getContrasena()))
+                .nombre(usuarioDTO.getNombre())
+                .apellido(usuarioDTO.getApellido())
+                .rol(rol)
+                .build();
+
+        usuarioRepository.save(usuario);
+
+        return AuthResponse.builder()
+                .token(jwtService.getToken(usuario))
+                .build();
+    }
 
     // public boolean login(UsuarioDTO datos){
-    //     Usuario usuario = usuarioRepository.findByNomUsuario(datos.getNomUsuario());
+    // Usuario usuario = usuarioRepository.findByNomUsuario(datos.getNomUsuario());
 
-    //     if(usuario != null){
-    //         String contrasenaHash = usuario.getContrasena();
-    //         return passwordEncoder.matches(datos.getContrasena(), contrasenaHash);
-    //     }
-    //     return false;
+    // if(usuario != null){
+    // String contrasenaHash = usuario.getContrasena();
+    // return passwordEncoder.matches(datos.getContrasena(), contrasenaHash);
+    // }
+    // return false;
 
     // }
 
+    public UsuarioDTO crearUsuario(UsuarioDTO usuarioDTO) {
 
-
-
-    public UsuarioDTO crearUsuario(UsuarioDTO usuarioDTO ){
-
-        if(usuarioRepository.findByNomUsuario(usuarioDTO.getNomUsuario()) != null){
+        if (usuarioRepository.findByNomUsuario(usuarioDTO.getNomUsuario()) != null) {
             System.out.println("usuario existe");
             return null;
         }
@@ -90,12 +116,14 @@ public class UsuarioService {
 
         // Buscar el rol y asignarlo al usuario
         Rol rol = rolRepository.findById(usuarioDTO.getRolId())
-            .orElseThrow(()-> new RuntimeException("Rol no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
 
         usuario.setRol(rol);
 
         // Encriptar la contraseña antes de guardarla
-        String contrasenaEncrypt = passwordEncoder.encode(usuarioDTO.getContrasena());
+        String contrasenaEncrypt = "prueba"
+        // passwordEncoder.encode(usuarioDTO.getContrasena())
+        ;
         usuario.setContrasena(contrasenaEncrypt);
 
         // Guardar el usuario en la base de datos
@@ -105,14 +133,13 @@ public class UsuarioService {
         return UsuarioMapper.INSTANCE.toUsuarioDTO(usuarioGuardado);
     }
 
-    public UsuarioDTO editarUsuario(Integer id, UsuarioDTO datos){
+    public UsuarioDTO editarUsuario(Integer id, UsuarioDTO datos) {
 
         // Recuperamos el usuario desde la base de datos por su ID
         Usuario usuarioEditar = usuarioRepository.findByIdUsuario(id);
 
-        
         if (usuarioEditar == null) {
-            throw new NoSuchElementException("Usuario con ID " + id +  "no encontrado");
+            throw new NoSuchElementException("Usuario con ID " + id + "no encontrado");
         }
 
         usuarioEditar.setNombre(datos.getNombre());
@@ -121,5 +148,5 @@ public class UsuarioService {
         return UsuarioMapper.INSTANCE.toUsuarioDTO(usuarioRepository.save(usuarioEditar));
 
     }
-    
+
 }

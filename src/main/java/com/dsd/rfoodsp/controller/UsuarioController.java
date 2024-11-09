@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dsd.rfoodsp.config.Security.AuthResponse;
+import com.dsd.rfoodsp.config.Security.LoginRequest;
 import com.dsd.rfoodsp.dto.UsuarioDTO;
 import com.dsd.rfoodsp.entities.Usuario;
 import com.dsd.rfoodsp.mapper.UsuarioMapper;
@@ -45,24 +47,38 @@ public class UsuarioController {
     }
 
 
-
+// nuevo
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UsuarioDTO datos){
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest datos){
 
-        String token = servicio.login(datos);
+        // String token = servicio.login(datos);
 
-        if(token != null){
-            return ResponseEntity.ok().body("Bearer " + token);
-        }else{
-           return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas");
-        }
+        return ResponseEntity.ok(servicio.login(datos));
+
+        // if(token != null){
+        //     return ResponseEntity.ok().body("Bearer " + token);
+        // }else{
+        //    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas");
+        // }
     }
 
+    // @PostMapping("/login")
+    // public ResponseEntity<String> login(@RequestBody UsuarioDTO datos){
 
-    @PostMapping("/nomUsuario")
-    public Usuario cargarUsuarioNomUsuario(@RequestBody Usuario datos){
-       return servicio.cargarUsuarioNomUsuario(datos.getNomUsuario());
-    }
+    //     String token = servicio.login(datos);
+
+    //     if(token != null){
+    //         return ResponseEntity.ok().body("Bearer " + token);
+    //     }else{
+    //        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas");
+    //     }
+    // }
+
+
+    // @PostMapping("/nomUsuario")
+    // public Usuario cargarUsuarioNomUsuario(@RequestBody Usuario datos){
+    //    return servicio.cargarUsuarioNomUsuario(datos.getNomUsuario());
+    // }
 
 
 
@@ -81,6 +97,13 @@ public class UsuarioController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioRest);
     }
+
+    @PostMapping("/registro")
+    public ResponseEntity<AuthResponse> registro(@RequestBody UsuarioDTO entity) {
+
+        return ResponseEntity.ok(servicio.register(entity));
+    }
+    
    
 
     @PutMapping("{id}")
