@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.dsd.rfoodsp.repository.UsuarioRepository;
+import com.dsd.rfoodsp.service.CustomUserDetailsService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,8 +21,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AppConfig {
 
+    // @Autowired
+    private final UsuarioRepository usuarioRepository;
+
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private CustomUserDetailsService cUserDetailsService;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception{
@@ -31,7 +35,7 @@ public class AppConfig {
     @Bean
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService());
+        authenticationProvider.setUserDetailsService(cUserDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
 
@@ -46,9 +50,8 @@ public class AppConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> usuarioRepository.findByNomUsuario(username)
+        //findByUsername()
         .orElseThrow(()-> new UsernameNotFoundException("no existe usuario"));
     }
-
-
-    
+   
 }

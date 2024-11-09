@@ -5,8 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@Builder
+@Data //geter y seters
+@Builder //contruir objetos
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginRequest {

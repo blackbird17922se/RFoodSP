@@ -1,5 +1,6 @@
 package com.dsd.rfoodsp.config.Security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -17,8 +18,8 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 
 
-    private final JwtAuthFilter jwtAuthFilter; // Inyectar el JwtAuthFilter
     private final AuthenticationProvider authProvider;  // Inyectar el AuthenticationProvider
+    private final JwtAuthFilter jwtAuthFilter; // Inyectar el JwtAuthFilter
 
     // metodo q restringe acceso a rutas
     @Bean
@@ -28,14 +29,46 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF
             // rutas privadas y protegidas
             .authorizeHttpRequests(authReq -> authReq
-                    .requestMatchers("/usuarios/**").permitAll() // request publicos
+                    .requestMatchers("/usuarios/login").permitAll() // request publicos
                     .anyRequest().authenticated() // demas request protegidos
             )
+            
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authenticationProvider(authProvider)  // Agregar el AuthenticationProvider
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-            .build();  // Agregar el filtro JWT
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class).build();  // Agregar el filtro JWT
 
+
+        // return http.build();
     }
 
+    // private final ObjectProvider<UsuarioService> usuarioServiceProvider;
+
+    // public SecurityConfig(ObjectProvider<UsuarioService> usuarioServiceProvider)
+    // {
+    // this.usuarioServiceProvider = usuarioServiceProvider;
+    // }
+
+    // @Bean
+    // public JwtRequestFilter jwtFiltro() {
+    // return new JwtRequestFilter(usuarioServiceProvider.getIfAvailable());
+    // }
+
+    // @Bean
+    // public PasswordEncoder passwordEncoder() {
+    // return new BCryptPasswordEncoder();
+    // }
+
+    // @Bean
+    // public SecurityFilterChain securityFilterChain(HttpSecurity http) throws
+    // Exception {
+    // http.csrf(csrf -> csrf.disable())
+    // .authorizeHttpRequests(request -> request
+    // .requestMatchers("/usuarios/login")
+    // .permitAll()
+
+    // .anyRequest()
+    // .authenticated())
+    // .addFilterBefore(jwtFiltro(), UsernamePasswordAuthenticationFilter.class);
+    // return http.build();
+    // }
 }

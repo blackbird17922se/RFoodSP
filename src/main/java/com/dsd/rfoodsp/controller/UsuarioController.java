@@ -22,97 +22,75 @@ import com.dsd.rfoodsp.responses.UsuarioRest;
 import com.dsd.rfoodsp.service.UsuarioService;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 
 @RestController
 @RequestMapping("/usuarios")
+@RequiredArgsConstructor
 public class UsuarioController {
 
-    @Autowired
     private final UsuarioService servicio;
 
-    public UsuarioController(UsuarioService usuarioService) {
-        this.servicio = usuarioService;
-    }
+
+    // @GetMapping
+    // public List<UsuarioRest> cargarUsuarios(){
+
+    //     List<Usuario> usuarios = servicio.cargarUsuarios();
+    //     return UsuarioMapper.INSTANCE.usuariosToUsuarioRests(usuarios);
+
+    // }
 
 
-    @GetMapping
-    public List<UsuarioRest> cargarUsuarios(){
-
-        List<Usuario> usuarios = servicio.cargarUsuarios();
-        return UsuarioMapper.INSTANCE.usuariosToUsuarioRests(usuarios);
-
-    }
-
-
-// nuevo
+    // nuevo
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest datos){
 
-        // String token = servicio.login(datos);
-
-        return ResponseEntity.ok(servicio.login(datos));
-
-        // if(token != null){
-        //     return ResponseEntity.ok().body("Bearer " + token);
-        // }else{
-        //    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas");
-        // }
+        return ResponseEntity.ok(
+            servicio.login(datos)
+        );
     }
 
-    // @PostMapping("/login")
-    // public ResponseEntity<String> login(@RequestBody UsuarioDTO datos){
-
-    //     String token = servicio.login(datos);
-
-    //     if(token != null){
-    //         return ResponseEntity.ok().body("Bearer " + token);
-    //     }else{
-    //        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas");
-    //     }
-    // }
-
-
-    // @PostMapping("/nomUsuario")
-    // public Usuario cargarUsuarioNomUsuario(@RequestBody Usuario datos){
-    //    return servicio.cargarUsuarioNomUsuario(datos.getNomUsuario());
-    // }
-
-
-
-    @PostMapping
-    public ResponseEntity<UsuarioRest> crearUsuario(@Valid @RequestBody UsuarioDTO datos, 
-        BindingResult result){
-
-        if(result.hasErrors()){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        UsuarioDTO usuarioCreado = servicio.crearUsuario(datos);
-        UsuarioRest usuarioRest = new UsuarioRest();
-
-        BeanUtils.copyProperties(usuarioCreado, usuarioRest);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioRest);
-    }
 
     @PostMapping("/registro")
     public ResponseEntity<AuthResponse> registro(@RequestBody UsuarioDTO entity) {
 
-        return ResponseEntity.ok(servicio.register(entity));
+        return ResponseEntity.ok(
+            servicio.register(entity)
+        );
     }
+
+
+
+    // @PostMapping
+    // public ResponseEntity<UsuarioRest> crearUsuario(@Valid @RequestBody UsuarioDTO datos, 
+    //     BindingResult result){
+
+    //     if(result.hasErrors()){
+    //         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    //     }
+
+    //     UsuarioDTO usuarioCreado = servicio.crearUsuario(datos);
+    //     UsuarioRest usuarioRest = new UsuarioRest();
+
+    //     BeanUtils.copyProperties(usuarioCreado, usuarioRest);
+
+    //     return ResponseEntity.status(HttpStatus.CREATED).body(usuarioRest);
+    // }
+
     
    
 
-    @PutMapping("{id}")
-    public ResponseEntity<UsuarioRest> actualizarUsuario(@PathVariable Integer id, @RequestBody UsuarioDTO entity) {
+    // @PutMapping("{id}")
+    // public ResponseEntity<UsuarioRest> actualizarUsuario(@PathVariable Integer id, @RequestBody UsuarioDTO entity) {
 
-        UsuarioDTO rt =servicio.editarUsuario(id, entity);
+    //     UsuarioDTO rt =servicio.editarUsuario(id, entity);
         
-        UsuarioRest ur = new UsuarioRest();
-        BeanUtils.copyProperties(rt, ur);
-        return ResponseEntity.status(HttpStatus.OK).body(ur);
-    }
+    //     UsuarioRest ur = new UsuarioRest();
+    //     BeanUtils.copyProperties(rt, ur);
+    //     return ResponseEntity.status(HttpStatus.OK).body(ur);
+    // }
 }

@@ -30,46 +30,45 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UsuarioService {
 
-    @Autowired
     private final UsuarioRepository usuarioRepository;
-
-    @Autowired
     private final RolRepository rolRepository;
-
-    // @Autowired
-    // private JwtUtil jwtUtil;
-
     private final JwtService jwtService;
-
     private final PasswordEncoder passwordEncoder;
-
     private final AuthenticationManager authenticationManager;
 
-    // public UsuarioService(UsuarioRepository usuarioRepository, RolRepository rolRepository
-    // // , PasswordEncoder passwordEncoder
-    //         , JwtService jwtService) {
-    //     this.usuarioRepository = usuarioRepository;
-    //     this.rolRepository = rolRepository;
-    //     this.jwtService = jwtService;
-    //     // this.passwordEncoder = passwordEncoder;
-    // }
+    @Autowired
+    private CustomUserDetailsService cUserDetailsService;
 
-    public List<Usuario> cargarUsuarios() {
-        return usuarioRepository.findAll();
-    }
-
-    // public Usuario cargarUsuarioNomUsuario(String nomUsuario){
-    // return usuarioRepository.findByNomUsuario(nomUsuario);
-    // }
 
     public AuthResponse login(LoginRequest datos) {
+        
+        try {
+            // Autentica al usuario utilizando el `AuthenticationManager`
+            authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(datos.getNom_usuario(), datos.getContrasena())
+            );
+
+
+            // Ahora carga el usuario desde la base de datos después de autenticar
+            UserDetails user = cUserDetailsService.loadUserByUsername(datos.getNom_usuario());
+            // usuarioRepository.findByNomUsuario(datos.getNom_usuario()).orElseThrow();
+            String token = jwtService.getToken(user);
+            
+            return AuthResponse.builder().token(token).build();
+
+        } catch (Exception e) {
+            throw new RuntimeException("Credenciales incorrectas", e);
+        }
+
+    }
+
+    public AuthResponse login2(LoginRequest datos) {
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(datos.getNom_usuario(), datos.getContrasena()));
         UserDetails user = usuarioRepository.findByNomUsuario(datos.getNom_usuario()).orElseThrow();
         String token = jwtService.getToken(user);
         return AuthResponse.builder().token(token).build();
     
-
     }
 
     public AuthResponse register(UsuarioDTO usuarioDTO) {
@@ -86,67 +85,71 @@ public class UsuarioService {
                 .rol(rol)
                 .build();
 
-        usuarioRepository.save(usuario);
+        usuarioRepository.save(usuario);    // crea registro
 
         return AuthResponse.builder()
                 .token(jwtService.getToken(usuario))
                 .build();
     }
 
-    // public boolean login(UsuarioDTO datos){
-    // Usuario usuario = usuarioRepository.findByNomUsuario(datos.getNomUsuario());
 
-    // if(usuario != null){
-    // String contrasenaHash = usuario.getContrasena();
-    // return passwordEncoder.matches(datos.getContrasena(), contrasenaHash);
+
+
+
+
+
+    // public List<Usuario> cargarUsuarios() {
+    //     return usuarioRepository.findAll();
     // }
-    // return false;
 
+
+    
+
+
+
+    // public UsuarioDTO crearUsuario(UsuarioDTO usuarioDTO) {
+
+    //     if (usuarioRepository.findByNomUsuario(usuarioDTO.getNomUsuario()) != null) {
+    //         System.out.println("usuario existe");
+    //         return null;
+    //     }
+
+    //     // Usar MapStruct para convertir de DTO a entidad
+    //     Usuario usuario = UsuarioMapper.INSTANCE.toUsuario(usuarioDTO);
+
+    //     // Buscar el rol y asignarlo al usuario
+    //     Rol rol = rolRepository.findById(usuarioDTO.getRolId())
+    //             .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+
+    //     usuario.setRol(rol);
+
+    //     // Encriptar la contraseña antes de guardarla
+    //     String contrasenaEncrypt = "prueba"
+    //     // passwordEncoder.encode(usuarioDTO.getContrasena())
+    //     ;
+    //     usuario.setContrasena(contrasenaEncrypt);
+
+    //     // Guardar el usuario en la base de datos
+    //     Usuario usuarioGuardado = usuarioRepository.save(usuario);
+
+    //     // Convertir de vuelta de entidad a DTO y devolver el resultado
+    //     return UsuarioMapper.INSTANCE.toUsuarioDTO(usuarioGuardado);
     // }
 
-    public UsuarioDTO crearUsuario(UsuarioDTO usuarioDTO) {
+    // public UsuarioDTO editarUsuario(Integer id, UsuarioDTO datos) {
 
-        if (usuarioRepository.findByNomUsuario(usuarioDTO.getNomUsuario()) != null) {
-            System.out.println("usuario existe");
-            return null;
-        }
+    //     // Recuperamos el usuario desde la base de datos por su ID
+    //     Usuario usuarioEditar = usuarioRepository.findByIdUsuario(id);
 
-        // Usar MapStruct para convertir de DTO a entidad
-        Usuario usuario = UsuarioMapper.INSTANCE.toUsuario(usuarioDTO);
+    //     if (usuarioEditar == null) {
+    //         throw new NoSuchElementException("Usuario con ID " + id + "no encontrado");
+    //     }
 
-        // Buscar el rol y asignarlo al usuario
-        Rol rol = rolRepository.findById(usuarioDTO.getRolId())
-                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+    //     usuarioEditar.setNombre(datos.getNombre());
+    //     usuarioEditar.setApellido(datos.getApellido());
 
-        usuario.setRol(rol);
+    //     return UsuarioMapper.INSTANCE.toUsuarioDTO(usuarioRepository.save(usuarioEditar));
 
-        // Encriptar la contraseña antes de guardarla
-        String contrasenaEncrypt = "prueba"
-        // passwordEncoder.encode(usuarioDTO.getContrasena())
-        ;
-        usuario.setContrasena(contrasenaEncrypt);
-
-        // Guardar el usuario en la base de datos
-        Usuario usuarioGuardado = usuarioRepository.save(usuario);
-
-        // Convertir de vuelta de entidad a DTO y devolver el resultado
-        return UsuarioMapper.INSTANCE.toUsuarioDTO(usuarioGuardado);
-    }
-
-    public UsuarioDTO editarUsuario(Integer id, UsuarioDTO datos) {
-
-        // Recuperamos el usuario desde la base de datos por su ID
-        Usuario usuarioEditar = usuarioRepository.findByIdUsuario(id);
-
-        if (usuarioEditar == null) {
-            throw new NoSuchElementException("Usuario con ID " + id + "no encontrado");
-        }
-
-        usuarioEditar.setNombre(datos.getNombre());
-        usuarioEditar.setApellido(datos.getApellido());
-
-        return UsuarioMapper.INSTANCE.toUsuarioDTO(usuarioRepository.save(usuarioEditar));
-
-    }
+    // }
 
 }
