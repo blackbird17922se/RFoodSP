@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.dsd.rfoodsp.config.Security.AuthResponse;
 import com.dsd.rfoodsp.config.Security.JwtService;
-import com.dsd.rfoodsp.config.Security.LoginRequest;
+import com.dsd.rfoodsp.model.dto.UsuarioDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,17 +25,17 @@ public class AuthService {
     private CustomUserDetailsService cUserDetailsService;
 
 
-    public AuthResponse login(LoginRequest datos) {
+    public AuthResponse login(UsuarioDTO datos) {
         
         try {
             // Autentica al usuario utilizando el `AuthenticationManager`
             authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(datos.getNom_usuario(), datos.getContrasena())
+                new UsernamePasswordAuthenticationToken(datos.getNomUsuario(), datos.getContrasena())
             );
 
 
             // Ahora carga el usuario desde la base de datos después de autenticar
-            UserDetails user = cUserDetailsService.loadUserByUsername(datos.getNom_usuario());
+            UserDetails user = cUserDetailsService.loadUserByUsername(datos.getNomUsuario());
             // usuarioRepository.findByNomUsuario(datos.getNom_usuario()).orElseThrow();
             String token = jwtService.getToken(user);
             
