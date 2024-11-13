@@ -2,7 +2,7 @@ package com.dsd.rfoodsp.repository;
 
 import org.springframework.stereotype.Repository;
 
-import com.dsd.rfoodsp.entities.Rol;
+import com.dsd.rfoodsp.model.entities.Rol;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

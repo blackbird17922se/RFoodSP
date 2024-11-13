@@ -3,93 +3,97 @@ package com.dsd.rfoodsp.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.BeanUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dsd.rfoodsp.dto.UsuarioDTO;
-import com.dsd.rfoodsp.entities.Usuario;
-import com.dsd.rfoodsp.mapper.UsuarioMapper;
+import com.dsd.rfoodsp.model.dto.UsuarioDTO;
 import com.dsd.rfoodsp.responses.UsuarioRest;
 import com.dsd.rfoodsp.service.UsuarioService;
 
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
-    @Autowired
     private final UsuarioService servicio;
 
-    public UsuarioController(UsuarioService usuarioService) {
-        this.servicio = usuarioService;
+    @Autowired
+    ModelMapper modelMap;
+
+
+
+    public UsuarioController(UsuarioService servicio) {
+        this.servicio = servicio;
     }
 
 
-    @GetMapping
-    public List<UsuarioRest> cargarUsuarios(){
-
-
-        List<Usuario> usuarios = servicio.cargarUsuarios();
-        return UsuarioMapper.INSTANCE.usuariosToUsuarioRests(usuarios);
-        
-
-        // Mapear la lista de usuarios a una lista de UsuarioRest
-        // List<UsuarioRest> usuarioRests = usuarios.stream()
-        //     .map(u -> {
-        //         UsuarioRest uRest = new UsuarioRest();
-        //         uRest.setNombre(u.getNombre());
-        //         uRest.setApellido(u.getApellido());
-        //         uRest.setNomUsuario(u.getNomUsuario());
-        //         uRest.setRolId(u.getRol().getId_rol());
-        //         return uRest;
-        //     }).collect(Collectors.toList()); //Collectors.toList() convierte el stream de objetos UsuarioRest en una lista.
-
-        // return usuarioRests;  
+    /**
+     * Endpoint para registrar un nuevo usuario.
+     * 
+     * @param entity Datos del usuario a registrar.
+     * @return Respuesta con el token de autenticación del usuario registrado.
+     */
+    @PostMapping("/registro")
+    public ResponseEntity<UsuarioRest> registrarUsuario(@RequestBody UsuarioDTO entity) {
+        // return ResponseEntity.ok(servicio.register(entity));
+        UsuarioRest response = servicio.registrarUsuario(entity);
+        return ResponseEntity.ok(response);
     }
 
 
+    /**
+     * Endpoint para obtener una lista de todos los usuarios.
+     * @return Lista de usuarios con sus roles.
+     */
+    @GetMapping("/leer")
+    public List<UsuarioRest> cargarUsuarios() {
 
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UsuarioDTO datos){
+        return servicio.cargarUsuarios().stream()
+                .map(usuario -> {
+                    // Convertir Usuario a UsuarioRest usando ModelMapper
+                    UsuarioRest usuarioRest = modelMap.map(usuario, UsuarioRest.class);
 
-        if(servicio.login(datos)){
-            return ResponseEntity.ok("Ok");
-        }else{
-           return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Fallo Login");
-        }
+                    // Asignar el nombre del rol manualmente
+                    usuarioRest.setNombreRol(usuario.getRol().getNombre());
+
+                    return usuarioRest;
+                }).collect(Collectors.toList());
+
     }
 
-
-    @PostMapping("/nomUsuario")
-    public Usuario cargarUsuarioNomUsuario(@RequestBody Usuario datos){
-       return servicio.cargarUsuarioNomUsuario(datos.getNomUsuario());
+    /** Traer los datos del usuario actual por su ID */
+    @GetMapping("/datosUsuario")
+    public ResponseEntity<UsuarioRest> cargarDatosUsuario(@RequestParam Integer id) {
+        UsuarioRest usuarioRest = servicio.cargarDatosUsuario(id);
+        return ResponseEntity.ok(usuarioRest);
     }
 
-
-
-    @PostMapping
-    public ResponseEntity<UsuarioRest> crearUsuario(@Valid @RequestBody UsuarioDTO datos, 
-        BindingResult result){
-
-        if(result.hasErrors()){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        UsuarioDTO usuarioCreado = servicio.crearUsuario(datos);
-        UsuarioRest usuarioRest = new UsuarioRest();
-
-        BeanUtils.copyProperties(usuarioCreado, usuarioRest);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioRest);
+    /** Actualizar nombre y apellido del usuario actual */
+    @PutMapping("/editar")
+    public ResponseEntity<UsuarioRest> actualizarUsuario(@RequestParam Integer id, @RequestBody UsuarioDTO entity) {
+        UsuarioRest usuarioActualizado = servicio.editarUsuario(id, entity);
+        return ResponseEntity.ok(usuarioActualizado);
     }
-   
+
+    /** Activar o desactivar un usuario (excepto superAdmin) */
+    @PutMapping("/estadoUsuario")
+    public ResponseEntity<UsuarioRest> cambiarEstadoUsuario(@RequestParam Integer id, @RequestBody UsuarioDTO datos) {
+        UsuarioRest usuarioActualizado = servicio.cambiarEstadoUsuario(id, datos);
+        return ResponseEntity.ok(usuarioActualizado);
+    }
+
+    /** Cambiar de rol (o permisos) */
+    @PutMapping("/cambiarRol")
+    public ResponseEntity<UsuarioRest> cambiarRolUsuario(@RequestParam Integer id, @RequestBody UsuarioDTO datos) {
+        UsuarioRest usuarioActualizado = servicio.cambiarRolUsuario(id, datos);
+        return ResponseEntity.ok(usuarioActualizado);
+    }
 }

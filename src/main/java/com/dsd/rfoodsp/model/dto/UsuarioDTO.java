@@ -1,4 +1,4 @@
-package com.dsd.rfoodsp.dto;
+package com.dsd.rfoodsp.model.dto;
 
 public class UsuarioDTO {
 
@@ -7,6 +7,7 @@ public class UsuarioDTO {
     private String nomUsuario;
     private String contrasena;
     private Integer rolId; // Aquí solo recibimos el ID del rol
+    private boolean activo;
 
     
     public String getNombre() {
@@ -38,6 +39,12 @@ public class UsuarioDTO {
     }
     public void setRolId(Integer rolId) {
         this.rolId = rolId;
+    }
+    public boolean isActivo() {
+        return activo;
+    }
+    public void setActivo(boolean activo) {
+        this.activo = activo;
     }
     
     

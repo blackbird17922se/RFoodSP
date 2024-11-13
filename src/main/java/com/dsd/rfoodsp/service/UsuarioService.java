@@ -1,89 +1,142 @@
 package com.dsd.rfoodsp.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-// import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.dsd.rfoodsp.dto.UsuarioDTO;
-import com.dsd.rfoodsp.entities.Rol;
-import com.dsd.rfoodsp.entities.Usuario;
-import com.dsd.rfoodsp.mapper.UsuarioMapper;
+import com.dsd.rfoodsp.model.dto.UsuarioDTO;
+import com.dsd.rfoodsp.model.entities.Rol;
+import com.dsd.rfoodsp.model.entities.Usuario;
 import com.dsd.rfoodsp.repository.RolRepository;
 import com.dsd.rfoodsp.repository.UsuarioRepository;
 import com.dsd.rfoodsp.responses.UsuarioRest;
 
+import jakarta.transaction.Transactional;
+
+
 @Service
 public class UsuarioService {
 
-    @Autowired
     private final UsuarioRepository usuarioRepository;
-
-    @Autowired
     private final RolRepository rolRepository;
-
     private final PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private ModelMapper modelMapper;
+    
+    
     
 
-
-    public UsuarioService(UsuarioRepository usuarioRepository, RolRepository rolRepository, PasswordEncoder passwordEncoder) {
+    public UsuarioService(UsuarioRepository usuarioRepository, RolRepository rolRepository, 
+        PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
         this.rolRepository = rolRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
 
-    public List<Usuario> cargarUsuarios(){
-        return usuarioRepository.findAll();
-    }
+    /** Registrar un nuevo usuario con un rol asignado */
+    public UsuarioRest registrarUsuario(UsuarioDTO usuarioDTO) {
 
-
-    public Usuario cargarUsuarioNomUsuario(String nomUsuario){
-        return usuarioRepository.findByNomUsuario(nomUsuario);
-    }
-
-    public boolean login(UsuarioDTO datos){
-        Usuario usuario = usuarioRepository.findByNomUsuario(datos.getNomUsuario());
-
-        if(usuario != null){
-            String contrasenaHash = usuario.getContrasena();
-            return passwordEncoder.matches(datos.getContrasena(), contrasenaHash);
-        }
-        return false;
-
-    }
-
-
-
-
-    public UsuarioDTO crearUsuario(UsuarioDTO usuarioDTO ){
-
-        if(usuarioRepository.findByNomUsuario(usuarioDTO.getNomUsuario()) != null){
-            System.out.println("usuario existe");
-            return null;
-        }
-
-        // Usar MapStruct para convertir de DTO a entidad
-        Usuario usuario = UsuarioMapper.INSTANCE.toUsuario(usuarioDTO);
-
-        // Buscar el rol y asignarlo al usuario
+        // Buscar el rol por su ID
         Rol rol = rolRepository.findById(usuarioDTO.getRolId())
-            .orElseThrow(()-> new RuntimeException("Rol no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
 
-        usuario.setRol(rol);
+        // Crear el nuevo usuario
+        Usuario usuario = Usuario.builder()
+                .nomUsuario(usuarioDTO.getNomUsuario())
+                .contrasena(passwordEncoder.encode(usuarioDTO.getContrasena()))
+                .nombre(usuarioDTO.getNombre())
+                .apellido(usuarioDTO.getApellido())
+                .rol(rol)
+                .activo(true)
+                .build();
 
-        // Encriptar la contraseña antes de guardarla
-        String contrasenaEncrypt = passwordEncoder.encode(usuarioDTO.getContrasena());
-        usuario.setContrasena(contrasenaEncrypt);
+        usuarioRepository.save(usuario);
+        return modelMapper.map(usuario, UsuarioRest.class);
 
-        // Guardar el usuario en la base de datos
-        Usuario usuarioGuardado = usuarioRepository.save(usuario);
-
-        // Convertir de vuelta de entidad a DTO y devolver el resultado
-        return UsuarioMapper.INSTANCE.toUsuarioDTO(usuarioGuardado);
     }
+
+
+    /** Obtener todos los usuarios junto con sus roles */
+    public List<Usuario> cargarUsuarios() {
+        return usuarioRepository.findAllUsuarioConRoles();
+    }
+
+
+    /** Obtener los datos de un usuario por su ID */
+    public UsuarioRest cargarDatosUsuario(Integer id) {
+        Usuario usuario = consultarExistenciaUsuario(id);
+        return modelMapper.map(usuario, UsuarioRest.class);
+    }
+
+
+    /** Editar nombre y apellido del usuario */
+    // Esta anotación asegura que si algo falla durante la actualización, los cambios se 
+    // revertirán automáticamente (rollback), protegiendo la integridad de los datos.
+    @Transactional
+    public UsuarioRest editarUsuario(Integer id, UsuarioDTO datos) {
+
+        Usuario usuarioEditar = consultarExistenciaUsuario(id);
+
+        usuarioEditar.setNombre(datos.getNombre());
+        usuarioEditar.setApellido(datos.getApellido());
+
+        usuarioRepository.save(usuarioEditar);
+
+        return modelMapper.map(usuarioEditar, UsuarioRest.class);
+    }
+
+
+    /** Cambiar estado de un usuario (activar/desactivar) */
+    @Transactional
+    public UsuarioRest cambiarEstadoUsuario(Integer id, UsuarioDTO datos) {
+
+        // si el usuario es el superAdmin. NO puede ser desactivao
+        Usuario usuario = consultarExistenciaUsuario(id);
+
+        if ("superAdmin".equals(usuario.getRol().getNombre())) {
+            throw new IllegalArgumentException("No se puede desactivar al superAdmin");
+        }
+
+        usuario.setActivo(datos.isActivo());
+        usuarioRepository.save(usuario);
+        return modelMapper.map(usuario, UsuarioRest.class);
+    }
+
     
+    /** Cambiar el rol de un usuario */
+    @Transactional
+    public UsuarioRest cambiarRolUsuario(Integer id, UsuarioDTO datos) {
+
+        Usuario usuario = consultarExistenciaUsuario(id);
+        
+        if ("superAdmin".equals(usuario.getRol().getNombre())) {
+            throw new IllegalArgumentException("No se puede cambiar el rol del superAdmin");
+        }
+
+        Rol nuevRol = rolRepository.findById(datos.getRolId())
+            .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+
+        usuario.setRol(nuevRol);
+        usuarioRepository.save(usuario);
+        return modelMapper.map(usuario, UsuarioRest.class); 
+    }
+
+
+    /** Verificar si el usuario existe por su ID */
+    public Usuario consultarExistenciaUsuario(Integer id){
+
+        Usuario datos = usuarioRepository.findByIdUsuario(id);
+
+        if(datos == null){
+            throw new NoSuchElementException("Usuario con ID " + id + " no encontrado");
+        }
+        return datos;
+    }
+
 }

@@ -9,3 +9,5 @@ CREATE TABLE usuario(
     FOREIGN KEY (id_rol) REFERENCES rol(id_rol)
 );
 
+ALTER TABLE usuario ADD COLUMN activo BOOLEAN NOT NULL;
+

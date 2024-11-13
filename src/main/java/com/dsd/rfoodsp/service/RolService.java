@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.dsd.rfoodsp.entities.Rol;
+import com.dsd.rfoodsp.model.entities.Rol;
 import com.dsd.rfoodsp.repository.RolRepository;
 
 @Service
@@ -16,7 +16,6 @@ public class RolService {
     private final RolRepository rolRepository;
 
 
-    @Autowired
     public RolService(RolRepository rolRepository){
         this.rolRepository = rolRepository;
     }
