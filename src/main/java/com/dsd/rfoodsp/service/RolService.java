@@ -16,7 +16,6 @@ public class RolService {
     private final RolRepository rolRepository;
 
 
-    @Autowired
     public RolService(RolRepository rolRepository){
         this.rolRepository = rolRepository;
     }

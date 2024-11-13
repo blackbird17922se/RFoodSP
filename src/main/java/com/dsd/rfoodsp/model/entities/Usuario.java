@@ -48,6 +48,9 @@ public class Usuario implements UserDetails{
     @Column(nullable = false)
     private String contrasena;
 
+    @Column(nullable = false)
+    private boolean activo;
+
     @ManyToOne
     @JoinColumn(name = "id_rol", nullable = false)
     private Rol rol; // Relación con la entidad Rol

@@ -28,7 +28,7 @@ public class RolController {
     @Autowired
     private final RolService servicio;
 
-    @Autowired
+    
     public RolController(RolService rolService){
         this.servicio = rolService;
     }
