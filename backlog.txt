@@ -1,0 +1,262 @@
+***************************************************************************************************
+***************************************** BACKLOG LIST ********************************************
+***************************************************************************************************
+
+--------------------------------------- Milestone START ----------------------------------------
+* Creacion CRUD de los modulos bases:
+    - Proveedores
+    - Tipos de ingredientes
+    - Medidas (evaluar si es mejor consumir una app independiente)
+    - Presentacion productos
+
+
+
+////////////////////////////////////////////// DONE ////////////////////////////////////////////////
+* Creacion CRUD de los modulos bases:
+    - Mesas
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////// DE LA ANTIGUA VERSION PHP ///////////////////////////
+///////////////////////////////// Build 4.6 ///////////////////////////////////////////
+
+    * caso mesa 7
+
+
+//////////////////////////////////// EN COLA //////////////////////////////////////////////////////////////////
+* en Nueva orden no elimina del localstarage el item al ir al carrito y dale eliminar
+* si en Nueva orden, le doy en "agregar al carrito" pero por algun motivo me equivoque y deseo cambiar la cantidad
+    deberia 'desbloquearse' al darle click en los +/-
+
+* al parecer si tengo 2 instancias de orden, ejectuo el pedido en la mesa X
+    y en la otra instancia efectuo un pedido en la misma mesa genera dipicidad deordene
+    en una mesa
+* en lote prod arreglar el editar y eliminar, guiese con sfarma
+* arreglar en ventas, cuando cambio de venta diaria a general y luego regreso a dia entonces id_venta se pierde. 
+    guiese con sfarma creando un evento al boton q pasa a venas dias y destruyendo la tabla generales
+
+* El sistema debe recargar la tabla donde se presenta los elementos en los modulos de
+    _Pedidos
+    _Por recoger
+    _Caja
+    Lo ideal es que solo refresque el div tabla.
+
+* fecha vencimiento lotes debe ser obligatoria
+
+▶️ Aclarar como va a ser el tema del IVA
+
+* impresion ordenes
+
+* impresion factura
+
+* impresion venta dia
+
+* domicilio puede tener opciones de 
+    -marcar entregado.
+    -ver el costo total
+
+
+
+
+------------------------------ PLUS -----------------------------------------------
+* en venta almacenar cuanto dinero se recibio y el vuelto.
+* Al editar los ingred de un item, podria intentar fusionar la tabla INGREDS ACTUALES
+    con INGRED NUEVOS.
+
+* Podria añadir un boton de 'Liberar mesa'
+
+* optimizar los items repetidos en una orden cuando se vana editar
+ (pedidoController)
+
+
+*caja js quitar funciones oncli inutiles (editar, borrar)
+
+* agregar la opcion de cancelar (borrar) un pedido o domicilio:
+    ej: El cliente cancelo la solicitud de pedido.
+
+* En caja en estilo responsive ajustar el desborde de texto de las filas que tienen la info del pedido
+
+* Agregar efecto glass al modal detalle venta en Venta
+* incorporar funcionalidad ocultar ventas efectivo
+-incorporar hibrido de ni cket entinces no leer filas
+
+
+
+****************************************************************************************************
+DONE:
+****************************************************************************************************
+///////////////////////////////// Build 4.6 ///////////////////////////////////////////
+
+    * !cajero no puede cerrar session
+    * verificar funcionalidad correcta Domicilios
+        - VERIFICAR funcionamiento inventario
+/////////////////////////////////////////////////////////////////////////////////////
+
+Build 4.5
+
+    * cuando se reliaza la venta, el check dividir c queda marcado, pero los check de los items se bloquean
+    * bloquear botones +- cuando check no esta habilitado
+    * arreglar total en G. Ventas, no esta calculando el total
+    * reparar calculo del vuelto.
+    * cuadrar tema calcular total general cuando la cuenta es dividida
+    * Verificar descuento inv de cuando el sistema acaba un lote y empieza con otro
+    * Implementar dividir cuenta.
+    - hacer seguimiento  a controldarr factcuenta porque el primer prod lo itera 2 veces.
+    - al iterar en uno de los items, consultar la cantidad original de la orden
+    - arreglar problema no crea venta
+/////////////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+Build 4.4.1
+
+* En el cierre de caja agregar opcion que permita filtrar por el tipo de pago.
+
+* Agregar a la gest de ventas filtro por cajero y formpago
+    - que el total calcule segun filtro
+    - reparar cierre caja
+
+* Mejorar parte cierre de caja.
+
+//////////////////
+Build 4.3.2
+//////////////////
+* Mejorar modulos de ventas, ver por
+    -Ventas del dia general.
+    -Ventas por fecha
+    -Ventas generales 
+
+//////////////////
+Build 4.2
+//////////////////
+* Reparar ventas dias.
+*editar desplegable procesar pedido, labels (dice compos...).
+*agregar alerta seleccionar meseros
+* arreglar parte visual modals.
+* Cambiar boton de Cerrar Sesion
+* Acomodar boton 'salir' en editar ingreds de un item
+* verificar funciones inutles en pedidoController
+
+
+
+//////////////////
+Build 4.1 (13/04)
+//////////////////
+* Mejorar parte visual y manejo en Caja
+* Se añadio el modulo domicilio
+* Agregar seleccion de pago (neki o daviplata)
+* Agregar lista desplegable en orden con los meseros, para que se pueda seleccionar el mesero cuando se usa una 
+    sola tablet.
+* Habilitar modulo Proveedores.
+* arreglar color tarjetas en Gestion usuarios
+* Verificar tema de usuarios y restricciones
+    -verificar porque no elimina la sesion al salir
+* EN VENTA AGREGAR EL ID DE LA ORDEN ENCIMA DE LA TABLA DE PLATOS VENDIDOS O HACER QUE EL CUADRITO DE LA ORDEN 
+    (EL DEL BOTON SELECCIONAR) CAMBIE DE COLOR
+* cargar en la vista de ventas el medio de pago usado en la venta
+    - REESTRUCTUTA DB TABLAS PEDIDO Y VENTA
+* cuando se cargan las mesas en ordenmesas o caja, el sistema evalua (y trae los preoductos), se puede optimizar
+    simplemente vcalidando si la mesa esta bloqueada o no y cargar solo la orden
+
+
+(12/04)
+//////////////////
+Build 4.0
+//////////////////
+* Reparar gestion mesa
+* Reparar ventas
+    - No se esta efectuando la venta en caja
+    - No esta cargando las ventas generales ni las del dia
+
+(11/04)
+* el modulo pedido 
+    OK- al seleccionar btn 'ver pedidos' se despliega un  modal que contiene los item de la orden y un btn que conduce a 
+        editarOrden
+* CREAR ORDEN
+    OK- se podria hacer que el cajero vea una interfaz como la de las mesas y que simplemente sea presionar un btn 'seleccionar' que le
+        carge la orden y luego si pueda 'realizar venta'.
+    OK- una vez efectada la venta, la mesa se libera de la orden
+* REMMPLAZADO POR EDIT ORDEN EN ORDENMESAS -- en gestion de pedidos permitir agregar mas items al pedido 
+    (ej: el cliente aparte de la darbugese pidio luego a gaseosa)
+
+(09/04)
+* Bloquear la mesa cuando tenga un pedido (Ya no aparecera en el listado de mesas en ORDEN hasta que el pedido sea cancelado)
+
+
+(08/04)
+* verificar porque no permite agregar cantidades a los ingredientes (Agregar Lotes)
+// Se prueba y el sistema permite agregar el lote al crear el item o darle en el mas
+
+* Revisar porque no permite pasar el producto de estado terminado a caja (Al presionar 
+    'Plato entregado')
+// Se toma un plato de pruebas y se comprueba que hace el proceso desde orden hasta
+    ventas de manera correcta. se hace lo mismo con mas platos en la orden.
+▶️ Mientas se agrega la recarga automatica de la tabla que contiene las ordenes, pedidos
+    en ordenes, pedidos y caja, se recomienda actualizar la pagina manualmente.
+
+* Verificar edicion y eliminacion de ingreds (Gestion ingreds de un item)
+    // Se comprueba que los ingreds se editan(Sus cantidades) o borran de manera correcta.
+
+* Revisar gestion de mesas
+    OK- Revisar que el modulo este habilitado
+    OK- Sacar Gestion mesas de atributos menu
+    OK- Mostrar el numero o alias de la mesa (no el id 🤦‍♂️)
+
+* Quitar boton 'actualizar' en caja
+
+* arreglar la parte visual de orden cuando es tablet o cel
+
+* cambiar el sonido por el de 2003SERVER
+    - Bajar el Volumen del sonido
+
+
+(07/04)
+-lote 
+
+(06/04)
+- agregar ventas del dia
+- agregar seccion descuadre de inventario (cuando se realizo una venta
+    pero un ingrediente estaba 0 stock)
+
+- verificar descuento ingrediente inventario
+- permitir codbar vacio al crear ingrediente
+
+(17/03)
+- permitir codbar vacio al crear item
+- sacar confid del productoControl y Pasarlos al nuevo controlador itemControl
+
+(15/03)
+-permitir edicion codbar
+
+ITEM INGREDIENTES (06/12)
+- Permitir editar la cantidad de X ingrediente del item.
+- Permitir borrar el ingrediente del item.
+
+(08/12)
+- nuevoIngredItem deberia tener como titulo el nombre del item al cual
+    se le estan asignando ingreds.
+- Al agregar un nuevo ingrediente al item, validar si ese ingrediente
+    ya hace parte de los ingredientes de ese item (No falta el animal
+    que agrege el ingrediente dos veces :-\)
+- Debe permitir no agregar ningun ingrediente al item (Por ejemplo
+    una cerveza no lleva ingredientes del inventario)
+-corregir la no lectura si el item tiene iva
+
+*****************************DESCARTADAS
+
+* BUSCAR LA FORMA DE ACOMODAR LOS CAJONES EN PEDIDO Y POR RECOJER para q no quede esos huecos entre cajas 
+    (ya que a veces despista y hace creer que no hay mas cajas abajo)

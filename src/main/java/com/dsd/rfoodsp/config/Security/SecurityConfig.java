@@ -28,8 +28,13 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF
             // rutas privadas y protegidas
             .authorizeHttpRequests(authReq -> authReq
-                    .requestMatchers("/login").permitAll() // request publicos
-                    .anyRequest().authenticated() // demas request protegidos
+
+            // TODO: Desactivar cuando sea produccion
+            .anyRequest().permitAll()
+
+                    // OJO, DESABILITADO SOLO PARA BUILD.
+                    // .requestMatchers("/login").permitAll() // request publicos
+                    // .anyRequest().authenticated() // demas request protegidos
             )
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authenticationProvider(authProvider)  // Agregar el AuthenticationProvider

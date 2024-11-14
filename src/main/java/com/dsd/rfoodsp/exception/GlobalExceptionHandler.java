@@ -37,4 +37,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    // @ExceptionHandler(RuntimeException.class)
+    // public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
+    //     return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    // }
+
 }
