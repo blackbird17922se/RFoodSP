@@ -11,3 +11,9 @@ CREATE TABLE usuario(
 
 ALTER TABLE usuario ADD COLUMN activo BOOLEAN NOT NULL;
 
+CREATE TABLE mesa(
+    id_mesa INT NOT NULL AUTO_INCREMENT,
+    nombre VARCHAR(50) NULL,
+    disponible BOOLEAN NOT NULL,
+    PRIMARY KEY (id_mesa)
+);

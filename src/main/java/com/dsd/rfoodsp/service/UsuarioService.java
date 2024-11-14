@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.dsd.rfoodsp.exception.EnumManejoErrores;
 import com.dsd.rfoodsp.model.dto.UsuarioDTO;
 import com.dsd.rfoodsp.model.entities.Rol;
 import com.dsd.rfoodsp.model.entities.Usuario;
@@ -25,12 +26,13 @@ public class UsuarioService {
     private final RolRepository rolRepository;
     private final PasswordEncoder passwordEncoder;
 
+    private final String SUPERADMIN = "superAdmin";
+
     @Autowired
     private ModelMapper modelMapper;
     
     
     
-
     public UsuarioService(UsuarioRepository usuarioRepository, RolRepository rolRepository, 
         PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
@@ -44,7 +46,7 @@ public class UsuarioService {
 
         // Buscar el rol por su ID
         Rol rol = rolRepository.findById(usuarioDTO.getRolId())
-                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+                .orElseThrow(() -> new RuntimeException(EnumManejoErrores.ROL_NO_ENCONTRADO.getMensaje()));
 
         // Crear el nuevo usuario
         Usuario usuario = Usuario.builder()
@@ -99,8 +101,8 @@ public class UsuarioService {
         // si el usuario es el superAdmin. NO puede ser desactivao
         Usuario usuario = consultarExistenciaUsuario(id);
 
-        if ("superAdmin".equals(usuario.getRol().getNombre())) {
-            throw new IllegalArgumentException("No se puede desactivar al superAdmin");
+        if (SUPERADMIN.equals(usuario.getRol().getNombre())) {
+            throw new IllegalArgumentException(EnumManejoErrores.DESACT_SUPERADMIN.getMensaje());
         }
 
         usuario.setActivo(datos.isActivo());
@@ -115,12 +117,12 @@ public class UsuarioService {
 
         Usuario usuario = consultarExistenciaUsuario(id);
         
-        if ("superAdmin".equals(usuario.getRol().getNombre())) {
-            throw new IllegalArgumentException("No se puede cambiar el rol del superAdmin");
+        if (SUPERADMIN.equals(usuario.getRol().getNombre())) {
+            throw new IllegalArgumentException(EnumManejoErrores.CAMBIO_SUPERADMIN.getMensaje());
         }
 
         Rol nuevRol = rolRepository.findById(datos.getRolId())
-            .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+            .orElseThrow(() -> new RuntimeException(EnumManejoErrores.ROL_NO_ENCONTRADO.getMensaje()));
 
         usuario.setRol(nuevRol);
         usuarioRepository.save(usuario);
@@ -134,7 +136,7 @@ public class UsuarioService {
         Usuario datos = usuarioRepository.findByIdUsuario(id);
 
         if(datos == null){
-            throw new NoSuchElementException("Usuario con ID " + id + " no encontrado");
+            throw new NoSuchElementException(EnumManejoErrores.USUARIO_ID_NO_ENCONTRADO.getMensaje(id));
         }
         return datos;
     }

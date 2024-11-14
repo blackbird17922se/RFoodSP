@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.dsd.rfoodsp.exception.EnumManejoErrores;
 import com.dsd.rfoodsp.repository.UsuarioRepository;
 import com.dsd.rfoodsp.service.CustomUserDetailsService;
 
@@ -51,7 +52,7 @@ public class AppConfig {
     public UserDetailsService userDetailsService() {
         return username -> usuarioRepository.findByNomUsuario(username)
         //findByUsername()
-        .orElseThrow(()-> new UsernameNotFoundException("no existe usuario"));
+        .orElseThrow(()-> new UsernameNotFoundException(EnumManejoErrores.USUARIO_NO_ENCONTRADO.getMensaje()));
     }
    
 }

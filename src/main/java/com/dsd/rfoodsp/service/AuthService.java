@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.dsd.rfoodsp.config.Security.AuthResponse;
 import com.dsd.rfoodsp.config.Security.JwtService;
+import com.dsd.rfoodsp.exception.EnumManejoErrores;
 import com.dsd.rfoodsp.model.dto.UsuarioDTO;
 
 import lombok.RequiredArgsConstructor;
@@ -42,7 +43,7 @@ public class AuthService {
             return AuthResponse.builder().token(token).build();
 
         } catch (Exception e) {
-            throw new RuntimeException("Credenciales incorrectas", e);
+            throw new RuntimeException(EnumManejoErrores.CREDENCIALES_INCORRECTAS.getMensaje(), e);
         }
 
     }
