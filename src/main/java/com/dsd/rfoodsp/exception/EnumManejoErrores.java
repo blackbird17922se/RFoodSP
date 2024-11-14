@@ -3,11 +3,18 @@ package com.dsd.rfoodsp.exception;
 public enum EnumManejoErrores {
 
     // Usuarios
+    USUARIO_NO_ENCONTRADO("No existe el usuario"),
+    USUARIO_ID_NO_ENCONTRADO("Usuario con ID %s no encontrado"),
+
+    // Roles
+    ROL_DUPLICADO("El Rol ya existe"),
+    ROL_NO_ENCONTRADO("El Rol no existe"),
+    DESACT_SUPERADMIN("No se puede desactivar al superAdmin"),
+    CAMBIO_SUPERADMIN("No se puede cambiar el rol del superAdmin"),
 
     // Mesas
     MESA_DUPLICADA("El nombre de la mesa ya existe"),
     MESA_NO_ENCONTRADA("La mesa solicitada no existe"),
-
 
     // Proveedores
     PROVEEDOR_DUPLICADO("El proveedor ya está registrado"),
@@ -25,7 +32,8 @@ public enum EnumManejoErrores {
     VENTA_FALLIDA("No se pudo procesar la venta"),
 
     // Generales
-    ACCESO_DENEGADO("No tiene permisos para realizar esta acción");
+    ACCESO_DENEGADO("No tiene permisos para realizar esta acción"),
+    CREDENCIALES_INCORRECTAS("Credenciales Incorrectas");
 
     
     private final String mensaje;
@@ -34,8 +42,12 @@ public enum EnumManejoErrores {
         this.mensaje = mensaje;
     }
 
-    public String getMensaje() {
-        return mensaje;
+    // public String getMensaje() {
+    //     return mensaje;
+    // }
+
+    public String getMensaje(Object... args) {
+        return String.format(this.mensaje, args);
     }
 
 }

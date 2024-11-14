@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.dsd.rfoodsp.exception.EnumManejoErrores;
 import com.dsd.rfoodsp.model.entities.Rol;
 import com.dsd.rfoodsp.repository.RolRepository;
 
@@ -33,8 +34,7 @@ public class RolService {
      */
     public Rol crearRol(Rol rol){
         if(rolRepository.findByNombre(rol.getNombre()) != null){
-            System.out.println("rol ya existe");
-            return null;
+            throw new RuntimeException(EnumManejoErrores.ROL_DUPLICADO.getMensaje());
         }
         return rolRepository.save(rol);
     }

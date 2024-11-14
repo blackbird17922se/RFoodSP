@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dsd.rfoodsp.model.dto.MesaDTO;
 import com.dsd.rfoodsp.service.MesaService;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +36,7 @@ public class MesaController {
     }
 
 
+    @Operation(summary = "Obtener todas las mesas")
     @GetMapping("")
     public List<MesaDTO> obtenerMesas() {
         return servicio.obtenerMesas();
