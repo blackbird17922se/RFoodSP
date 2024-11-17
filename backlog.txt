@@ -3,19 +3,16 @@
 ***************************************************************************************************
 
 --------------------------------------- Milestone START ----------------------------------------
-* Creacion CRUD de los modulos bases:
-    - Proveedores
-    - Tipos de ingredientes
-    - Medidas (evaluar si es mejor consumir una app independiente)
-    - Presentacion productos
-
-
+* Creacion CRUD modulos:
+    -Orden
+    -Ventas
 
 ////////////////////////////////////////////// DONE ////////////////////////////////////////////////
 * Creacion CRUD de los modulos bases:
     - Mesas
 
-
+* Creacion CRUD modulos:
+    -Productos
 
 
 
@@ -255,6 +252,15 @@ ITEM INGREDIENTES (06/12)
 - Debe permitir no agregar ningun ingrediente al item (Por ejemplo
     una cerveza no lleva ingredientes del inventario)
 -corregir la no lectura si el item tiene iva
+
+
+* Creacion CRUD de los modulos bases:
+    - Proveedores
+    - Tipos de ingredientes
+    - Medidas (evaluar si es mejor consumir una app independiente)
+    - Presentacion productos
+
+
 
 *****************************DESCARTADAS
 
