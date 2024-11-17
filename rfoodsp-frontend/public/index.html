@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login RFood</title>
+    <link rel="shortcut icon" href="assets/icons/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="vendors/adminlte.min.css">
+</head>
+
+<body id="body-login">
+    <div class="container">
+        <div class="row" id="row-login">
+            <div class="col-lg-4 col-lg-offset-7 col-md-offset-2  col-sm-12">
+                <h1 class="logo-login">RFood</h1>
+                <div class="box-login">
+                    <div class="box-form">
+
+                        <form id="login-form">
+                            <div class="form-group">
+                                <input type="text" placeholder="Nombre del Usuario"
+                                    title="Escriba el nombre de usuario asignado en RFood"
+                                    name="nomUsuario" class="form-control input" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" title="Ingrese su contraseña" placeholder="Contraseña"
+                                    name="contrasena" class="form-control input" required>
+                            </div>
+
+                            <input type="button" id="btn-log" value="Ingresar" onclick="login()">
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/login.js"></script>
+</body>
+
+</html>
