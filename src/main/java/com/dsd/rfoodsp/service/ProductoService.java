@@ -50,12 +50,7 @@ public class ProductoService {
 
     public ProductoDTO editarProducto(Integer id, ProductoDTO datos){
 
-        Producto productoEditar = repository.findByIdProducto(id);
-
-        if (productoEditar == null) {
-            throw new RuntimeException(EnumManejoErrores.PRODUCTO_NO_ENCONTRADO.getMensaje());
-        }
-
+        Producto productoEditar = verificarExistenciaProducto(id);
         productoEditar.setNombre(datos.getNombre());
         productoEditar.setPrecio(datos.getPrecio());
 
@@ -68,11 +63,7 @@ public class ProductoService {
     /** Desactivar o Activar un registro, es equivalente a borrar */
     public ProductoDTO cambiarEstadoProducto(Integer id){
 
-        Producto productoEditar = repository.findByIdProducto(id);
-
-        if (productoEditar == null) {
-            throw new RuntimeException(EnumManejoErrores.PRODUCTO_NO_ENCONTRADO.getMensaje());
-        }
+        Producto productoEditar = verificarExistenciaProducto(id);
 
         // productoEditar.setActivo(productoEditar.isActivo() ? false : true);
         productoEditar.setActivo(!productoEditar.isActivo());
@@ -80,6 +71,18 @@ public class ProductoService {
         repository.save(productoEditar);
 
         return mapper.map(productoEditar, ProductoDTO.class);
+    }
+
+
+    public Producto verificarExistenciaProducto(Integer id){
+        
+        Producto productoEditar = repository.findByIdProducto(id);
+
+        if (productoEditar == null) {
+            throw new RuntimeException(EnumManejoErrores.PRODUCTO_NO_ENCONTRADO.getMensaje());
+        }
+
+        return productoEditar;
     }
     
 }

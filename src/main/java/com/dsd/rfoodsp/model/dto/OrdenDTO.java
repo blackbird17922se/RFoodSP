@@ -1,5 +1,6 @@
 package com.dsd.rfoodsp.model.dto;
 
+import java.util.List;
 
 public class OrdenDTO {
 
@@ -11,6 +12,9 @@ public class OrdenDTO {
     /** Puede ser el mesero */
     private Integer idUsuario;
     private Integer idMesa;
+
+    /** Contiene el array de los detalles de los productos como idProducto y cantidad */
+    List<DetalleOrdenDTO> detalles;
 
 
 
@@ -69,5 +73,15 @@ public class OrdenDTO {
     public void setIdMesa(Integer idMesa) {
         this.idMesa = idMesa;
     }
+
+    public List<DetalleOrdenDTO> getDetalles() {
+        return detalles;
+    }
+
+    public void setDetalles(List<DetalleOrdenDTO> detalles) {
+        this.detalles = detalles;
+    }
+
+    
 
 }

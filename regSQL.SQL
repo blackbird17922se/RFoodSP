@@ -67,3 +67,15 @@ CREATE TABLE venta_producto(
     CONSTRAINT fk_producto FOREIGN KEY(id_producto) REFERENCES producto(id_producto),
     CONSTRAINT fk_venta FOREIGN KEY(id_venta) REFERENCES venta(id_venta)
 );
+
+
+CREATE TABLE detalle_orden(
+	id_detalle INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    cantidad INT NOT NULL,
+    precio_unitario INT NOT NULL,
+    activo BOOLEAN DEFAULT TRUE,
+    id_orden INT NOT NULL,
+    id_producto INT NOT NULL,
+    CONSTRAINT fk_det_orden_orden FOREIGN KEY(id_orden) REFERENCES orden(id_orden),
+    CONSTRAINT fk_det_orden_producto FOREIGN KEY(id_producto) REFERENCES producto(id_producto)
+);
