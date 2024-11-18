@@ -21,6 +21,7 @@ public enum EnumManejoErrores {
 
     // Productos
     PRODUCTO_NO_ENCONTRADO("El producto no se encontró"),
+    PRODUCTO_DUPLICADO("El producto ya existe"),
     
     // Ingredientes
     INGREDIENTE_NO_DISPONIBLE("El ingrediente no está disponible"),
@@ -48,6 +49,10 @@ public enum EnumManejoErrores {
 
     public String getMensaje(Object... args) {
         return String.format(this.mensaje, args);
+    }
+
+    public String getMensaje() {
+        return String.format(this.mensaje);
     }
 
 }
