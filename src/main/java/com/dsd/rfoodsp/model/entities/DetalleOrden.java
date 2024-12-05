@@ -34,6 +34,8 @@ public class DetalleOrden {
     private Producto producto;
 
 
+    public DetalleOrden(){}
+
     public DetalleOrden(Orden nuevaOrden, Producto producto, Integer cantidad, Integer precio) {
         this.orden = nuevaOrden;
         this.producto = producto;

@@ -8,6 +8,7 @@ import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 
 import com.dsd.rfoodsp.exception.EnumManejoErrores;
+import com.dsd.rfoodsp.model.dto.DetalleOrdenDTO;
 import com.dsd.rfoodsp.model.dto.OrdenDTO;
 import com.dsd.rfoodsp.model.entities.DetalleOrden;
 import com.dsd.rfoodsp.model.entities.Mesa;
@@ -85,6 +86,26 @@ public class OrdenService {
         List<Orden> listaOrdenes = repository.findByEntregadoFalse();
         List<OrdenDTO> listaOrdenesDTO = mapper.map(listaOrdenes, new TypeToken<List<OrdenDTO>>(){}.getType());
         return listaOrdenesDTO;
+    }
+
+
+    /** Cargar los detalles de la orden, como los platos pedidos y sus cantidades */
+    public List<DetalleOrdenDTO> getDetalleOrden(Integer idOrden){
+
+        Orden orden = repository.findByIdOrden(idOrden);
+
+        if (orden == null) {
+            throw new RuntimeException(EnumManejoErrores.ORDEN_NO_VALIDA.getMensaje());
+        }
+
+        List<DetalleOrden> detalle = detalleOrdenRepository.findByOrden(orden);
+        // List<DetalleOrden> detalles = detalleOrdenRepository.findByOrdenId(idOrden);
+
+        List<DetalleOrdenDTO> detalleOrdenDTO = mapper.map(detalle, new TypeToken<List<DetalleOrdenDTO>>(){}.getType());
+
+
+        return detalleOrdenDTO;
+
     }
 
 
