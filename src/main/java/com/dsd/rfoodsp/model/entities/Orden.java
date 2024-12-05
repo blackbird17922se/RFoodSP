@@ -48,8 +48,31 @@ public class Orden {
 
 
     // Bidireccion con tablas asociadas
+    /* 1. mappedBy = "orden"
+    Esto indica que la relación es bidireccional y que el lado inverso de la relación 
+     (en la clase DetalleOrden) tiene el campo llamado orden. 
+     
+     2. cascade = CascadeType.ALL
+    Este atributo define cómo se propagan las operaciones (persistir, actualizar, eliminar) 
+     desde la entidad principal (Orden) hacia las entidades relacionadas (DetalleOrden en este caso).
+
+     3. fetch = FetchType.LAZY
+    Esto define cómo se cargan los detalles relacionados desde la base de datos:
+
+    FetchType.LAZY (perezoso):
+    No carga los DetalleOrden inmediatamente al consultar una Orden.
+    Los detalles se cargan solo cuando los accedes explícitamente, por ejemplo, con orden.getDetalles(). 
+        Esto mejora el rendimiento, especialmente cuando no necesitas siempre los detalles.
+    
+    FetchType.EAGER (ansioso):
+    Carga automáticamente los detalles relacionados junto con la orden. Puede ser útil si casi siempre 
+        necesitas los detalles al trabajar con una orden, pero podría reducir el rendimiento en consultas grandes.
+    */
     @OneToMany(mappedBy = "orden", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<DetalleOrden> detalles;
+
+    @OneToMany(mappedBy = "orden", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Venta> ventas;
 
     
     public Orden() {}

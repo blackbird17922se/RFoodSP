@@ -3,16 +3,19 @@
 ***************************************************************************************************
 
 --------------------------------------- Milestone START ----------------------------------------
-* Creacion CRUD modulos:
-    -Orden
-    -Ventas
 
 ////////////////////////////////////////////// DONE ////////////////////////////////////////////////
+* Create para:
+    -Venta
+    -DetalleVenta
+
 * Creacion CRUD de los modulos bases:
     - Mesas
 
 * Creacion CRUD modulos:
     -Productos
+    -Orden
+    -DetalleOrden
 
 
 

@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dsd.rfoodsp.model.dto.DetalleOrdenDTO;
 import com.dsd.rfoodsp.model.dto.OrdenDTO;
+import com.dsd.rfoodsp.model.entities.DetalleOrden;
 import com.dsd.rfoodsp.service.OrdenService;
 
 
@@ -36,6 +38,13 @@ public class OrdenController {
     @GetMapping
     public List<OrdenDTO> getOrdenesActivas(){
         return service.getOrdenesActivas();
+    }
+
+
+    /** Cargar los detalles de la orden, como los platos pedidos y sus cantidades */
+    @GetMapping("/detallesOrden")
+    public List<DetalleOrdenDTO> getDetalleOrden(@RequestParam Integer id){
+        return service.getDetalleOrden(id);
     }
 
 
