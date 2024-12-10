@@ -3,6 +3,11 @@
 ***************************************************************************************************
 
 --------------------------------------- Milestone START ----------------------------------------
+* agregar al back mesas la edicion del estado, ya que
+ en un caso de q la mesa se bloquee, el admin deberia
+ poder desbloquearla.
+ 
+* Agregar al back "eliminar mesa" (cambiar activo true/false)
 
 ////////////////////////////////////////////// DONE ////////////////////////////////////////////////
 * Create para:

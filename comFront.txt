@@ -1,6 +1,0 @@
-npx create-react-app .
-npm install axios
-
-npm start
-
-npm install react-router-dom

@@ -1,0 +1,49 @@
+.mesas-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .mesas-form {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+  }
+  
+  .mesas-form div {
+    margin-bottom: 10px;
+  }
+  
+  .mesas-form label {
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  
+  .mesas-form input,
+  .mesas-form select {
+    padding: 5px;
+    width: 100%;
+  }
+  
+  .mesas-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .mesas-table th,
+  .mesas-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .mesas-table th {
+    background-color: #f4f4f4;
+  }
+  
+  .error {
+    color: red;
+    font-size: 0.9em;
+  }
+  
